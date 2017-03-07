@@ -282,6 +282,65 @@
     //}];//cranberrygame
 }
 
+- (void)getTopScores:(CDVInvokedUrlCommand *)command {
+    
+    NSString *leaderboardId = [command.arguments objectAtIndex:0];
+    
+    GKLeaderboard *leaderboard = [[GKLeaderboard alloc] init];
+    leaderboard.identifier = leaderboardId;
+    leaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
+    leaderboard.timeScope = GKLeaderboardTimeScopeAllTime;
+    [leaderboard loadScoresWithCompletionHandler: ^(NSArray *scores, NSError *error) {
+        if (error) {
+            NSLog(@"%@", error);
+            
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+        }
+        else if (scores) {
+            NSMutableArray *response = [[NSMutableArray alloc] init];
+            for(GKScore *score in scores){
+                NSMutableDictionary *item = [[NSMutableDictionary alloc] init];
+                [item setValue:score.formattedValue forKey:@"score"];
+                [item setValue:score.player.alias forKey:@"player"];
+                
+                [response addObject:item];
+            }
+            
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: response ];
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+        }
+    }];
+    
+}
+
+- (void)getAchievements:(CDVInvokedUrlCommand *)command {
+
+
+    [GKAchievement loadAchievementsWithCompletionHandler: ^(NSArray *achievements, NSError *error){
+        if (error != nil)
+        {
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+        }
+        else {
+            NSMutableArray *response = [[NSMutableArray alloc] init];
+            for(GKAchievement *achiev in achievements){
+                [response addObject:achiev.identifier];
+            }
+            
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: response ];
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+            
+            
+        }
+        
+    }];
+    
+}
+
 - (void)showLeaderboard:(CDVInvokedUrlCommand *)command {
 /*
     //runtime error

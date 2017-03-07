@@ -29,6 +29,8 @@
 - (void)getPlayerImage:(CDVInvokedUrlCommand *)command;
 - (void)getPlayerScore:(CDVInvokedUrlCommand *)command;
 - (void)submitScore:(CDVInvokedUrlCommand *)command;
+- (void)getTopScores:(CDVInvokedUrlCommand *)command;
+- (void)getAchievements:(CDVInvokedUrlCommand *)command;
 - (void)showLeaderboard:(CDVInvokedUrlCommand *)command;
 - (void)showLeaderboards:(CDVInvokedUrlCommand *)command;
 - (void)unlockAchievement:(CDVInvokedUrlCommand *)command;

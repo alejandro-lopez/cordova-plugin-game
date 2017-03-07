@@ -1,3 +1,5 @@
+cordova.define("cordova-plugin-game.game", function(require, exports, module) {
+
 
 module.exports = {
 	_loggedin: false,
@@ -5,7 +7,7 @@ module.exports = {
 	setUp: function () {
 		cordova.exec(
 		function (result) {
-		}, 
+		},
 		function (error) {
 		}, "Game", "setUp", []);
     },
@@ -14,13 +16,13 @@ module.exports = {
 		cordova.exec(function (result) {
 			var playerDetail = result;
 			self._loggedin = true;
-			self.tag = tag;			
+			self.tag = tag;
 			if (self.onLoginSucceeded)
 				self.onLoginSucceeded(playerDetail);
-		}, 
+		},
 		function (error) {
-			self.tag = tag;		
-			if (self.onLoginFailed)			
+			self.tag = tag;
+			if (self.onLoginFailed)
 				self.onLoginFailed();
 		}, "Game", "login", []);
     },
@@ -28,7 +30,7 @@ module.exports = {
 		var self = this;
 		cordova.exec(function (result) {
 			self._loggedin = false;
-		}, 
+		},
 		function (error) {
 		}, "Game", "logout", []);
     },
@@ -39,26 +41,32 @@ module.exports = {
 		var self = this;
 		cordova.exec(function (result) {
 			self.tag = tag;
-			if (self.onSubmitScoreSucceeded)			
+			if (self.onSubmitScoreSucceeded)
 				self.onSubmitScoreSucceeded();
-		}, 
+		},
 		function (error) {
 			self.tag = tag;
-			if (self.onSubmitScoreFailed)			
+			if (self.onSubmitScoreFailed)
 				self.onSubmitScoreFailed();
 		}, "Game", "submitScore", [leaderboardId, score]);
+	},
+	getTopScores: function (leaderboardId, resolve, reject) {
+		cordova.exec(resolve, reject, "Game", "getTopScores", [leaderboardId]);
+	},
+	getAchievements: function (success, failure) {
+		cordova.exec(success, failure, "Game", "getAchievements", []);
 	},
 	showLeaderboard: function (leaderboardId) {
 		cordova.exec(
 		function (result) {
-		}, 
+		},
 		function (error) {
 		}, "Game", "showLeaderboard", [leaderboardId]);
 	},
 	showLeaderboards: function () {
 		cordova.exec(
 		function (result) {
-		}, 
+		},
 		function (error) {
 		}, "Game", "showLeaderboards", []);
 	},
@@ -69,10 +77,10 @@ module.exports = {
 			self.tag = tag;
 			if (self.onGetPlayerScoreSucceeded)
 				self.onGetPlayerScoreSucceeded(playerScore);
-		}, 
+		},
 		function (error) {
 			self.tag = tag;
-			if (self.onGetPlayerScoreFailed)			
+			if (self.onGetPlayerScoreFailed)
 				self.onGetPlayerScoreFailed();
 		}, "Game", "getPlayerScore", [leaderboardId]);
 	},
@@ -80,12 +88,12 @@ module.exports = {
 		var self = this;
 		cordova.exec(function (result) {
 			self.tag = tag;
-			if (self.onUnlockAchievementSucceeded)			
+			if (self.onUnlockAchievementSucceeded)
 				self.onUnlockAchievementSucceeded();
-		}, 
+		},
 		function (error) {
 			self.tag = tag;
-			if (self.onUnlockAchievementFailed)			
+			if (self.onUnlockAchievementFailed)
 				self.onUnlockAchievementFailed();
 		}, "Game", "unlockAchievement", [achievementId]);
 	},
@@ -93,51 +101,53 @@ module.exports = {
 		var self = this;
 		cordova.exec(function (result) {
 			self.tag = tag;
-			if (self.onIncrementAchievementSucceeded)			
+			if (self.onIncrementAchievementSucceeded)
 				self.onIncrementAchievementSucceeded();
-		}, 
+		},
 		function (error) {
 			self.tag = tag;
-			if (self.onIncrementAchievementFailed)			
+			if (self.onIncrementAchievementFailed)
 				self.onIncrementAchievementFailed();
 		}, "Game", "incrementAchievement", [achievementId, incrementalStepOrCurrentPercent]);
-	},	
+	},
 	showAchievements: function () {
 		cordova.exec(
 		function (result) {
-		}, 
+		},
 		function (error) {
 		}, "Game", "showAchievements", []);
 	},
 	resetAchievements: function () {
 		var self = this;
 		cordova.exec(function (result) {
-			if (self.onResetAchievementsSucceeded)			
+			if (self.onResetAchievementsSucceeded)
 				self.onResetAchievementsSucceeded();
-		}, 
+		},
 		function (error) {
-			if (self.onResetAchievementsFailed)			
+			if (self.onResetAchievementsFailed)
 				self.onResetAchievementsFailed();
 		}, "Game", "resetAchievements", []);
-	},	
+	},
 	getPlayerImage: function () {
 		var self = this;
 		cordova.exec(function (result) {
 			var playerImageUrl = result;
-			if (self.onGetPlayerImageSucceeded)			
+			if (self.onGetPlayerImageSucceeded)
 				self.onGetPlayerImageSucceeded(playerImageUrl);
-		}, 
+		},
 		function (error) {
-			if (self.onGetPlayerImageFailed)			
+			if (self.onGetPlayerImageFailed)
 				self.onGetPlayerImageFailed();
 		}, "Game", "getPlayerImage", []);
-	},	
+	},
 	onLoginSucceeded: null,
-	onLoginFailed: null,	
+	onLoginFailed: null,
 	onSubmitScoreSucceeded: null,
 	onSubmitScoreFailed: null,
+	onGetTotalScoreSucceeded: null,
+	onGetTotalScoreFailed: null,
     onGetPlayerScoreSucceeded: null,
-    onGetPlayerScoreFailed: null,	
+    onGetPlayerScoreFailed: null,
 	onUnlockAchievementSucceeded: null,
 	onUnlockAchievementFailed: null,
 	onIncrementAchievementSucceeded: null,
@@ -147,3 +157,6 @@ module.exports = {
 	onGetPlayerImageSucceeded: null,
 	onGetPlayerImageFailed: null
 };
+
+
+});
