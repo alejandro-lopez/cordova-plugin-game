@@ -618,14 +618,16 @@ public class Game extends CordovaPlugin implements GameHelper.GameHelperListener
                                 while (iterator.hasNext()) {
                                     JSONObject playerScore = new JSONObject();
                                     LeaderboardScore score = iterator.next();
-                                    playerScore.put("name", score.getScoreHolderDisplayName());
+                                    playerScore.put("player", score.getScoreHolderDisplayName());
                                     playerScore.put("score", score.getDisplayScore());
 
-                                    results.put(score);
+                                    results.put(playerScore);
                                 }
 
                             } catch (JSONException e) {
                             }
+
+                            //"LeaderboardScoreRef{Rank=1, DisplayRank=1º, Score=439, DisplayScore=439, Timestamp=1488924004117, DisplayName=MercurialFrenemy1951, IconImageUri=content://com.google.android.gms.games.background/images/9541ca4c/414, IconImageUrl=http://lh3.googleusercontent.com/oAFG8zGwzdySbb7Z3sWNHv9Sel3L5JrX8-zNOQlxylLvL6ezr0o3eECaRcc5rmfzz_c=s96, HiResImageUri=content://com.google.android.gms.games.background/images/9541ca4c/6, HiResImageUrl=http://lh3.googleusercontent.com/oAFG8zGwzdySbb7Z3sWNHv9Sel3L5JrX8-zNOQlxylLvL6ezr0o3eECaRcc5rmfzz_c=s564, Player=PlayerRef{PlayerId=g14358365284954688861, DisplayName=MercurialFrenemy1951, HasDebugAccess=false, IconImageUri=content://com.google.android.gms.games.background/images/9541ca4c/414, IconImageUrl=http://lh3.googleusercontent.com/oAFG8zGwzdySbb7Z3sWNHv9Sel3L5JrX8-zNOQlxylLvL6ezr0o3eECaRcc5rmfzz_c=s96, HiResImageUri=content://com.google.android.gms.games.background/images/9541ca4c/6, HiResImageUrl=http://lh3.googleusercontent.com/oAFG8zGwzdySbb7Z3sWNHv9Sel3L5JrX8-zNOQlxylLvL6ezr0o3eECaRcc5rmfzz_c=s564, RetrievedTimestamp=1488991914756, Title=Espertalhão, LevelInfo=com.google.android.gms.games.PlayerLevelInfo@94a20eb0, GamerTag=MercurialFrenemy1951, Name=null, BannerImageLandscapeUri=content://com.google.android.gms.games.background/images/9541ca4c/472, BannerImageLandscapeUrl=http://lh3.googleusercontent.com/I2yadG1Gyqpk2rQNtW3GfJNNKjHXBuYLULmTPdvcvx6325gNhSo-B3jcpBRzBseeHKZnyf1EaG8aeHXd6yE=s1776, BannerImagePortraitUri=content://com.google.android.gms.games.background/images/9541ca4c/473, BannerImagePortraitUrl=http://lh3.googleusercontent.com/iXNdw4kqPIpEFFF45s8f6rJUYW9J0-OxUI9VVP2dRlY06Kj99Qy0Qi0yGuq_IlGDGMqyZK5g3FlmD-GYqA=s1776, GamerFriendStatus=-1, GamerFriendUpdateTimestamp=0, IsMuted=false}, ScoreTag=null}"
 
                             PluginResult pr = new PluginResult(PluginResult.Status.OK, results);
                             callbackContext.sendPluginResult(pr);
