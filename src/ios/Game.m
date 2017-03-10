@@ -302,7 +302,7 @@
             NSMutableArray *response = [[NSMutableArray alloc] init];
             for(GKScore *score in scores){
                 NSMutableDictionary *item = [[NSMutableDictionary alloc] init];
-                [item setValue:score.value forKey:@"score"];
+                [item setValue:score.formattedValue forKey:@"score"];
                 [item setValue:score.player.alias forKey:@"player"];
                 
                 [response addObject:item];
