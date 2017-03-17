@@ -143,7 +143,7 @@
                     }
                     else {
                         NSString *playerID = [GKLocalPlayer localPlayer].playerID;
-                        NSString *displayName = [GKLocalPlayer localPlayer].displayName;
+                        NSString *displayName = [GKLocalPlayer localPlayer].alias;
                         
                         NSDictionary* playerDetail = @{
                                                        @"playerId":playerID,
