@@ -236,10 +236,15 @@
 			[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
 		}
 		else if (scores) {
-			GKScore *s = leaderboard.localPlayerScore;
-			NSLog(@"Local player's score: %lld", s.value);
+			GKScore *score = leaderboard.localPlayerScore;
+			NSLog(@"Local player's score: %lld", score.value);
+            
+            NSMutableDictionary *playerDetail = [[NSMutableDictionary alloc] init];
+            [playerDetail setValue:score.formattedValue forKey:@"score"];
+            [playerDetail setValue:score.player.alias forKey:@"player"];
+            [playerDetail setObject: [NSNumber numberWithLong:score.rank] forKey:@"rank"];
 			
-            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithFormat:@"%lld", s.value]];
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:playerDetail];
  			//[pr setKeepCallbackAsBool:YES];
 			[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
 			//CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];

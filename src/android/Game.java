@@ -572,17 +572,19 @@ public class Game extends CordovaPlugin implements GameHelper.GameHelperListener
                 //https://developer.android.com/reference/com/google/android/gms/games/leaderboard/Leaderboards.LoadPlayerScoreResult.html
                 if (result.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK) {
                     //https://developer.android.com/reference/com/google/android/gms/games/leaderboard/LeaderboardScore.html
-                    LeaderboardScore ls = result.getScore();
-                    long score = 0;
-                    if (ls != null)
-                        score = ls.getRawScore();
+                    LeaderboardScore score = result.getScore();
 
-                    PluginResult pr = new PluginResult(PluginResult.Status.OK, score);
-                    //pr.setKeepCallback(true);
-                    getPlayerScoreCC.sendPluginResult(pr);
-                    //PluginResult pr = new PluginResult(PluginResult.Status.ERROR);
-                    //pr.setKeepCallback(true);
-                    //getPlayerScoreCC.sendPluginResult(pr);
+                    try {
+                        JSONObject playerScore = new JSONObject();
+                        playerScore.put("player", score.getScoreHolderDisplayName());
+                        playerScore.put("score", score.getDisplayScore());
+                        playerScore.put("rank", score.getRank());
+
+                        PluginResult pr = new PluginResult(PluginResult.Status.OK, playerScore);
+                        getPlayerScoreCC.sendPluginResult(pr);
+
+                    } catch (JSONException e) {
+                    }
                 } else {
                     //PluginResult pr = new PluginResult(PluginResult.Status.OK);
                     //pr.setKeepCallback(true);
