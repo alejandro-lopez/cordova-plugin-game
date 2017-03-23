@@ -235,7 +235,7 @@
 			//[pr setKeepCallbackAsBool:YES];
 			[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
 		}
-		else if (scores) {
+		else if (scores && leaderboard.localPlayerScore) {
 			GKScore *score = leaderboard.localPlayerScore;
 			NSLog(@"Local player's score: %lld", score.value);
             

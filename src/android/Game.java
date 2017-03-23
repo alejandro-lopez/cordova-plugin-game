@@ -570,7 +570,7 @@ public class Game extends CordovaPlugin implements GameHelper.GameHelperListener
             @Override
             public void onResult(Leaderboards.LoadPlayerScoreResult result) {
                 //https://developer.android.com/reference/com/google/android/gms/games/leaderboard/Leaderboards.LoadPlayerScoreResult.html
-                if (result.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK) {
+                if (result.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK && result.getScore() != null) {
                     //https://developer.android.com/reference/com/google/android/gms/games/leaderboard/LeaderboardScore.html
                     LeaderboardScore score = result.getScore();
 
