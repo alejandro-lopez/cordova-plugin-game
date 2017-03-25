@@ -22,6 +22,7 @@
 #define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface Game ()
+@property (nonatomic, retain) GKScore *localPlayerScore;
 @property (nonatomic, retain) GKLeaderboardViewController *leaderboardController;
 @property (nonatomic, retain) GKAchievementViewController *achievementsController;
 @end
@@ -224,9 +225,11 @@
 	//http://stackoverflow.com/questions/21591123/how-to-get-local-player-score-from-game-center
 	GKLeaderboard *leaderboard = [[GKLeaderboard alloc] init];
   	leaderboard.identifier = leaderboardId;
+    leaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
+    leaderboard.timeScope = GKLeaderboardTimeScopeAllTime;
 	[leaderboard loadScoresWithCompletionHandler: ^(NSArray *scores, NSError *error) {
 		if (error) {
-			NSLog(@"%@", error);
+			NSLog(@"SyncPlayerScore %@", error);
 			
 			//CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
 			//[pr setKeepCallbackAsBool:YES];
@@ -235,14 +238,16 @@
 			//[pr setKeepCallbackAsBool:YES];
 			[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
 		}
-		else if (scores && leaderboard.localPlayerScore) {
+		else if (scores) {
 			GKScore *score = leaderboard.localPlayerScore;
-			NSLog(@"Local player's score: %lld", score.value);
             
-            NSMutableDictionary *playerDetail = [[NSMutableDictionary alloc] init];
-            [playerDetail setValue:score.formattedValue forKey:@"score"];
-            [playerDetail setValue:score.player.alias forKey:@"player"];
-            [playerDetail setObject: [NSNumber numberWithLong:score.rank] forKey:@"rank"];
+            NSDictionary *playerDetail = @{
+                @"score": [NSString stringWithFormat:@"%lld", score.value],
+                @"player": score.player.alias,
+                @"rank": [NSNumber numberWithLong:score.rank]
+            };
+            
+            NSLog(@"SyncPlayerScore score: %@", playerDetail);
 			
             CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:playerDetail];
  			//[pr setKeepCallbackAsBool:YES];
@@ -250,7 +255,24 @@
 			//CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
 			//[pr setKeepCallbackAsBool:YES];
 			//[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
-		}
+        } else if (self.localPlayerScore){
+            /* Storing a cache of the localPlayerScore because after calling the method getTopScores, 
+             the API wouldn't return any values when calling it again here, i.e. error and scores were nill */
+            
+            GKScore *score = self.localPlayerScore;
+            
+            NSDictionary *playerDetail = @{
+                @"score": [NSString stringWithFormat:@"%lld", score.value],
+                @"player": score.player.alias,
+                @"rank": [NSNumber numberWithLong:score.rank]
+            };
+            
+            NSLog(@"SyncPlayerScore loading from local cache: %@", playerDetail);
+            
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:playerDetail];
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+            
+        }
 	}];
 }
 
@@ -296,6 +318,7 @@
     leaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
     leaderboard.timeScope = GKLeaderboardTimeScopeAllTime;
     [leaderboard loadScoresWithCompletionHandler: ^(NSArray *scores, NSError *error) {
+
         if (error) {
             NSLog(@"%@", error);
             
@@ -304,13 +327,16 @@
             [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
         }
         else if (scores) {
+            self.localPlayerScore = leaderboard.localPlayerScore;
+            
             NSMutableArray *response = [[NSMutableArray alloc] init];
             for(GKScore *score in scores){
-                NSMutableDictionary *item = [[NSMutableDictionary alloc] init];
-                [item setValue:score.formattedValue forKey:@"score"];
-                [item setValue:score.player.alias forKey:@"player"];
                 
-                [response addObject:item];
+                [response addObject:@{
+                    @"score": [NSString stringWithFormat:@"%lld", score.value],
+                    @"player": score.player.alias
+                }];
+                
             }
             
             CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: response ];
