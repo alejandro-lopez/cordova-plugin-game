@@ -560,6 +560,7 @@
 - (void)dealloc {
     self.leaderboardController = nil;
     self.achievementsController = nil;
+    self.localPlayerScore = nil;
     
     [super dealloc];
 }
