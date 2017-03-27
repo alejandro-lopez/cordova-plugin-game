@@ -317,6 +317,7 @@
     leaderboard.identifier = leaderboardId;
     leaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
     leaderboard.timeScope = GKLeaderboardTimeScopeAllTime;
+    leaderboard.range = NSMakeRange(1, 100);
     [leaderboard loadScoresWithCompletionHandler: ^(NSArray *scores, NSError *error) {
 
         if (error) {
