@@ -318,7 +318,7 @@
     leaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
     leaderboard.timeScope = GKLeaderboardTimeScopeAllTime;
     leaderboard.range = NSMakeRange(1, 100);
-    [leaderboard loadScoresWithCompletionHandler: ^(NSArray *scores, NSError *error) {
+    [leaderboard loadScoresWithCompletionHandler: ^(NSArray<GKScore *> *result, NSError *error) {
 
         if (error) {
             NSLog(@"%@", error);
@@ -327,20 +327,25 @@
 
             [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
         }
-        else if (scores) {
+        else if (result) {
+            
             self.localPlayerScore = leaderboard.localPlayerScore;
             
-            NSMutableArray *response = [[NSMutableArray alloc] init];
-            for(GKScore *score in scores){
+            NSMutableArray *scores = [[NSMutableArray alloc] init];
+            for(GKScore *score in result){
                 
-                [response addObject:@{
+                [scores addObject:@{
                     @"score": [NSString stringWithFormat:@"%lld", score.value],
                     @"player": score.player.alias
                 }];
                 
             }
             
-            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: response ];
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: @{
+                @"leaderboard": leaderboard.title,
+                @"leaderboardId": leaderboard.identifier,
+                @"scores": scores
+            }];
             [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
         }
     }];
