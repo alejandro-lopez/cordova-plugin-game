@@ -30,6 +30,7 @@
 - (void)getPlayerScore:(CDVInvokedUrlCommand *)command;
 - (void)submitScore:(CDVInvokedUrlCommand *)command;
 - (void)getTopScores:(CDVInvokedUrlCommand *)command;
+- (void)getLeaderboards:(CDVInvokedUrlCommand *)command;
 - (void)getAchievements:(CDVInvokedUrlCommand *)command;
 - (void)showLeaderboard:(CDVInvokedUrlCommand *)command;
 - (void)showLeaderboards:(CDVInvokedUrlCommand *)command;

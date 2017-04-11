@@ -24,6 +24,8 @@ import android.content.Intent;
 
 import com.google.android.gms.games.achievement.Achievement;
 import com.google.android.gms.games.achievement.AchievementBuffer;
+import com.google.android.gms.games.leaderboard.Leaderboard;
+import com.google.android.gms.games.leaderboard.LeaderboardBuffer;
 import com.google.android.gms.games.leaderboard.LeaderboardScoreBuffer;
 import com.google.example.games.basegameutils.GameHelper;
 import com.google.android.gms.common.ConnectionResult;
@@ -297,6 +299,25 @@ public class Game extends CordovaPlugin implements GameHelper.GameHelperListener
                 public void run() {
                     if (getGameHelper().isSignedIn()) {
                         _getTopScores(leaderboardId, delayedCC);
+                    } else {
+                        //PluginResult pr = new PluginResult(PluginResult.Status.OK);
+                        //pr.setKeepCallback(true);
+                        //delayedCC.sendPluginResult(pr);
+                        PluginResult pr = new PluginResult(PluginResult.Status.ERROR, "Not logged in");
+                        //pr.setKeepCallback(true);
+                        delayedCC.sendPluginResult(pr);
+                    }
+                }
+            });
+
+            return true;
+        } else if (action.equals("getLeaderboards")) {
+            final CallbackContext delayedCC = callbackContext;
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getGameHelper().isSignedIn()) {
+                        _getLeaderboards(delayedCC);
                     } else {
                         //PluginResult pr = new PluginResult(PluginResult.Status.OK);
                         //pr.setKeepCallback(true);
@@ -603,6 +624,42 @@ public class Game extends CordovaPlugin implements GameHelper.GameHelperListener
         //http://stackoverflow.com/questions/23248157/how-to-get-score-from-google-play-game-services-leaderboard-of-current-player
         Games.Leaderboards.loadCurrentPlayerLeaderboardScore(getGameHelper().getApiClient(), leaderboardId, LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC)
                 .setResultCallback(new ResultCallbackSubmitScoreResult());
+    }
+
+    private void _getLeaderboards(final CallbackContext callbackContext) {
+        class ResultCallbackLoadLeaderboards implements ResultCallback<Leaderboards.LeaderboardMetadataResult> {
+          @Override
+            public void onResult(Leaderboards.LeaderboardMetadataResult result) {
+                if (result.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK) {
+                    LeaderboardBuffer leaderboardBuffer = result.getLeaderboards();
+                    Iterator<Leaderboard> iterator = leaderboardBuffer.iterator();
+
+                    try {
+                        JSONArray results = new JSONArray();
+                        while (iterator.hasNext()) {
+                            Leaderboard leaderboard = iterator.next();
+                            JSONObject item = new JSONObject();
+                            item.put("name", leaderboard.getDisplayName());
+                            item.put("code", leaderboard.getLeaderboardId());
+                            results.put(item);
+                        }
+
+                        PluginResult pr = new PluginResult(PluginResult.Status.OK, results);
+                        callbackContext.sendPluginResult(pr);
+
+                    } catch (JSONException e) {
+                        PluginResult pr = new PluginResult(PluginResult.Status.ERROR);
+                        callbackContext.sendPluginResult(pr);
+                    }
+
+                } else {
+                    PluginResult pr = new PluginResult(PluginResult.Status.ERROR);
+                    callbackContext.sendPluginResult(pr);
+                }
+            }
+        }
+
+        Games.Leaderboards.loadLeaderboardMetadata(getGameHelper().getApiClient(), true).setResultCallback(new ResultCallbackLoadLeaderboards());
     }
 
     private void _getTopScores(final String leaderboardId, final CallbackContext callbackContext) {
@@ -912,215 +969,4 @@ public class Game extends CordovaPlugin implements GameHelper.GameHelperListener
         getGameHelper().onActivityResult(requestCode, resultCode, intent);
     }
 
-/*
-	//javascript
-	getPlayerImage: function (cb) {
-		var self = this;
-		//cordova.exec(function (result) {
-		//	var playerImageUrl = result;
-		//	if (self.onGetPlayerImageSucceeded)
-		//		self.onGetPlayerImageSucceeded(playerImageUrl);
-		//},
-		//function (error) {
-		//	if (self.onGetPlayerImageFailed)
-		//		self.onGetPlayerImageFailed();
-		//}, "Game", "getPlayerImage", []);
-
-        this.gapi.client.request({
-          path : "/games/v1/players/me",
-          callback : function(result) {
-            var er = result && !result.error ? success(result) : null;
-            cb(er, result.error);
-          }
-        });
-	},
-
-	//java
-    @SuppressWarnings("unused")
-    public void request(CordovaArgs args, final CallbackContext ctx) throws JSONException {
-
-        JSONObject params = args.getJSONObject(0);
-        String path = params.getString("path");
-        JSONObject requestParams = params.optJSONObject("params");
-        String method = params.optString("method");
-        if (method == null || method.length() == 0) {
-            method = "GET";
-        }
-        HashMap<String, String> headers = null;
-        JSONObject obj = params.optJSONObject("headers");
-        if (obj != null) {
-            headers = new HashMap<String, String>();
-            Iterator<String> keys = obj.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                headers.put(key, obj.get(key).toString());
-            }
-        }
-
-        byte[] body = null;
-        try
-        {
-            JSONObject bodyJSON = params.optJSONObject("body");
-            if (bodyJSON != null) {
-                body = bodyJSON.toString().getBytes("utf-8");
-            }
-            else {
-                String bodyString = params.optString("body");
-                if (bodyString != null && bodyString.length() > 0) {
-                    body = bodyString.getBytes("utf-8");
-                }
-            }
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-        }
-
-        request_inner(path, method, requestParams, body, headers, new GPGService.RequestCallback() {
-            @Override
-            public void onComplete(JSONObject responseJSON, GPGService.Error error) {
-
-                JSONObject data = new JSONObject();
-                try
-                {
-                    if (responseJSON != null) {
-                        data.put("response", responseJSON);
-                    }
-                    if (error != null) {
-                        data.put("error", new JSONObject(error.toMap()));
-                    }
-
-                }
-                catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
-                ctx.sendPluginResult(new PluginResult(PluginResult.Status.OK, data));
-            }
-        });
-    }
-
-    public void request_inner(String path,final String method,  JSONObject params, final byte[] body, final Map<String, String> headers, final RequestCallback callback) throws JSONException {
-
-        if (!this.client.isConnected()) {
-
-            if (callback != null) {
-                callback.onComplete(null, new Error("User is not logged into Google Play Game Services", 0));
-            }
-            return;
-        }
-
-
-        if (path.startsWith("/")) {
-            path = "https://www.googleapis.com" + path;
-        }
-
-        if (params != null) {
-            String query = "";
-            Iterator<String> it = params.keys();
-            while (it.hasNext()) {
-                if (query.length() == 0)
-                    query+="&";
-                String key = it.next();
-                query+= key + "=" + params.get(key).toString();
-            }
-            path+= "?" + query;
-        }
-
-        final String absolutePath = path;
-
-        AsyncTask<Void, Void, Object> task = new AsyncTask<Void, Void, Object>() {
-
-            @Override
-            protected Object doInBackground(Void... params) {
-                HttpURLConnection connection = null;
-
-                try {
-                    URL url = new URL(absolutePath);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestProperty("Authorization", "Bearer " + GPGService.this.authToken);
-                    connection.setRequestMethod(method);
-
-                    if (headers != null) {
-                        for (String key : headers.keySet())
-                        {
-                            connection.setRequestProperty(key, headers.get(key));
-                        }
-                    }
-
-                    if (body != null)
-                    {
-                        connection.setFixedLengthStreamingMode(body.length);
-                        connection.setDoOutput(true);
-                        if (connection.getRequestProperty("Content-Type") == null)
-                            connection.setRequestProperty("Content-Type",  "text/plain;charset=UTF-8");
-
-                        connection.setRequestProperty("Content-Length", Integer.toString(body.length));
-                        OutputStream output = null;
-                        try
-                        {
-                            output = connection.getOutputStream();
-                            output.write(body);
-                        }
-                        finally
-                        {
-                            if (output != null) {
-                                output.close();
-                            }
-                        }
-                    }
-
-                    int statusCode = connection.getResponseCode();
-                    InputStream inputStream;
-                    if (statusCode >= 200 && statusCode < 300) {
-                        inputStream = connection.getInputStream();
-                    } else {
-                        inputStream = connection.getErrorStream();
-                    }
-
-                    String content = convertStreamToString(inputStream);
-
-                    JSONObject result = new JSONObject(content);
-                    return result;
-                }
-                catch (Exception e) {
-                    return new Error(e.getLocalizedMessage(), 0);
-                }
-                finally {
-                    if (connection != null) {
-                        connection.disconnect();
-                    }
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Object info) {
-                if (callback == null) {
-                    return;
-                }
-                if (info == null) {
-                    callback.onComplete(null, null);
-                }
-                else if (info instanceof Error) {
-                    callback.onComplete(null, (Error)info);
-                }
-                else {
-                    callback.onComplete((JSONObject)info, null);
-                }
-            }
-
-        };
-
-        if (this.executor != null) {
-            task.executeOnExecutor(executor);
-        }
-        else  {
-            task.execute();
-        }
-    }
-
-    static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
-*/
 }

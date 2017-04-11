@@ -53,6 +53,11 @@ module.exports = {
 	getAchievements: function (success, failure) {
 		cordova.exec(success, failure, "Game", "getAchievements", []);
 	},
+	getLeaderboards: function () {
+		return new Promise(function(resolve, reject){
+			cordova.exec(resolve, reject, "Game", "getLeaderboards", []);
+		})
+	},
 	showLeaderboard: function (leaderboardId) {
 		cordova.exec(
 		function (result) {

@@ -352,6 +352,32 @@
     
 }
 
+- (void)getLeaderboards:(CDVInvokedUrlCommand *)command {
+
+    [GKLeaderboard loadLeaderboardsWithCompletionHandler: ^(NSArray<GKLeaderboard *> *result, NSError *error) {
+
+        if (error) {
+            NSLog(@"%@", error);
+
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+        }
+        else {
+            
+            NSMutableArray * leaderboards = [[NSMutableArray alloc] init];
+            for(GKLeaderboard *leaderboard in result){
+                [leaderboards addObject:@{@"name": leaderboard.title, @"code": leaderboard.identifier}];
+            }
+            
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: leaderboards];
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+        }
+    }];
+
+}
+
+
 - (void)getAchievements:(CDVInvokedUrlCommand *)command {
 
 
