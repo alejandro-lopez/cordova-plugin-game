@@ -319,6 +319,7 @@
     leaderboard.timeScope = GKLeaderboardTimeScopeAllTime;
     leaderboard.range = NSMakeRange(1, 100);
     [leaderboard loadScoresWithCompletionHandler: ^(NSArray<GKScore *> *result, NSError *error) {
+        
 
         if (error) {
             NSLog(@"%@", error);
@@ -345,6 +346,17 @@
                 @"leaderboard": leaderboard.title,
                 @"leaderboardId": leaderboard.identifier,
                 @"scores": scores
+            }];
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+        } else {
+            if(self.localPlayerScore) {
+                self.localPlayerScore.value = 0;
+            }
+            
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: @{
+              @"leaderboard": leaderboard.title,
+              @"leaderboardId": leaderboard.identifier,
+              @"scores": @[]
             }];
             [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
         }
