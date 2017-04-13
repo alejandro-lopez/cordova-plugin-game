@@ -663,7 +663,7 @@ public class Game extends CordovaPlugin implements GameHelper.GameHelperListener
     }
 
     private void _getTopScores(final String leaderboardId, final CallbackContext callbackContext) {
-        Games.Leaderboards.loadTopScores(getGameHelper().getApiClient(), leaderboardId, LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC, 25)
+        Games.Leaderboards.loadTopScores(getGameHelper().getApiClient(), leaderboardId, LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC, 25, true)
                 .setResultCallback(new ResultCallback<Leaderboards.LoadScoresResult>() {
 
                     @Override
