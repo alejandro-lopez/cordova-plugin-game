@@ -255,6 +255,23 @@
 			//CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
 			//[pr setKeepCallbackAsBool:YES];
 			//[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+        else if (scores && leaderboard.localPlayerScore) {
+			GKScore *score = leaderboard.localPlayerScore;
+            
+            NSDictionary *playerDetail = @{
+                @"score": [NSString stringWithFormat:@"%lld", score.value],
+                @"player": score.player.alias,
+                @"rank": [NSNumber numberWithLong:score.rank]
+            };
+            
+            NSLog(@"SyncPlayerScore score: %@", playerDetail);
+			
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:playerDetail];
+ 			//[pr setKeepCallbackAsBool:YES];
+			[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+			//CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+			//[pr setKeepCallbackAsBool:YES];
+			//[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
         } else if (self.localPlayerScore){
             /* Storing a cache of the localPlayerScore because after calling the method getTopScores, 
              the API wouldn't return any values when calling it again here, i.e. error and scores were nill */
@@ -270,6 +287,11 @@
             NSLog(@"SyncPlayerScore loading from local cache: %@", playerDetail);
             
             CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:playerDetail];
+            [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+            
+        } else {
+
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
             [self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
             
         }
