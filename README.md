@@ -13,37 +13,6 @@ This is open source cordova plugin.
 
 You can see Cordova Plugins in one page: http://cranberrygame.github.io?referrer=github
 
-```c
-cf)
-
-Leaderboard game: Best score game
-	Limited life
-		ex) 1, 3
-	Limited time
-		ex) 30 seconds
-	Time is score
-	
-Achievement
-	Score
-		ex)	Achievement1 (Score 10)
-			Achievement2 (Score 30)
-			Achievement3 (Score 60)
-			Achievement4 (Score 100)
-			Achievement5 (Score 150)
-	Level
-		ex)	Achievement1 (Level 1)
-			Achievement2 (Level 2)
-			Achievement3 (Level 4)
-			Achievement4 (Level 6)
-			Achievement5 (Level 8)
-			Achievement6 (Level 10)
-	Category
-		ex)	Achievement1 (Number)
-			Achievement1 (Fruit)
-			Achievement1 (Color)
-			Achievement1 (Other)
-			Achievement1 (Challenge (Limited time))
-```
 # Change log #
 ```c
 	1.0.109
@@ -55,166 +24,7 @@ Achievement
 	1.0.115
 		Refixed crash issue when submit score after logout.
 ```
-# Install plugin #
 
-## Cordova cli ##
-https://cordova.apache.org/docs/en/edge/guide_cli_index.md.html#The%20Command-Line%20Interface - npm install -g cordova@6.0.0
-```c
-//caution: replace 1064334934918 with your google play game app id
-cordova plugin add cordova-plugin-game --variable APP_ID="1064334934918"
-```
-## Xdk ##
-//caution: replace 1064334934918 with your google play game app id
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/xdk_APP_ID.png"><br>
-https://github.com/cranberrygame/cordova-plugin-game/blob/master/doc/intelxdk.config.additions.xml
-```c
-```
-
-## Cocoon ##
-https://cocoon.io - Create project - [specific project] - Setting - Plugins - Custom - Git Url: https://github.com/cranberrygame/cordova-plugin-game.git - INSTALL - Save<br>
-//caution: replace 1064334934918 with your google play game app id<br>
-https://cocoon.io - Create project - [specific project] - Setting - Plugins - Installed - Git Url https://github.com/cranberrygame/cordova-plugin-game.git - ADD PARAMETER - Name: APP_ID Value: 1064334934918 - Save<br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/cocoon_APP_ID1.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/cocoon_APP_ID2.png">
-
-## Phonegap build service (config.xml) ##
-https://build.phonegap.com/ - Apps - [specific project] - Update code - Zip file including config.xml
-```c
-//caution: replace 1064334934918 with your google play game app id
-<gap:plugin name="cordova-plugin-game" source="npm" >
-    <param name="APP_ID" value="1064334934918" />
-</gap:plugin>
-```
-
-## Construct2 ##
-Download construct2 plugin: http://www.paywithapost.de/pay?id=4ef3f2be-26e8-4a04-b826-6680db13a8c8
-<br>
-Now all the native plugins are installed automatically: https://plus.google.com/102658703990850475314/posts/XS5jjEApJYV
-# Server setting #
-
-## android (Google Play Game) ##
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/1_YOUR_GOOGLE_PLAY_GAME_APP_ID.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/2_YOUR_GOOGLE_PLAY_GAME_APP_ID.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/3.png"><br>
-If you migrate android app from one build system to another build system (e.g from xdk to cocoon), link Android step ~ again.<br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/4.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/5.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/6_if_Signing_certificate_fingerprint_(SHA1)_is_blank.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/7.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/8.png"><br>
-```c
-//add game
-google play developer console - Game services - Add a new game - Enter the name of your game: Test App, Category: Puzzle
-
-//get YOUR_GOOGLE_PLAY_GAME_APP_ID
-google play developer console - Game services - [specific app] - get YOUR_GOOGLE_PLAY_GAME_APP_ID (the number that appears beside the game name in the header of the Developer Console, e.g. "Test App - 12345678",. The YOUR_GOOGLE_PLAY_GAME_APP_ID in this case is 12345678.)
-
-//link app
-google play developer console - Game services - [specific app] - Linked App - Android - Save and continue - Authorize your app now - Continue - Create Client (if Signing certificate fingerprint (SHA1) is blank, do it after publishing app in alpha, beta, or normal (after publishing, it will be filled automatically))
-
-//add leaderboard, get YOUR_GOOGLE_PLAY_GAME_LEADERBOARD_ID
-google play developer console - Game services - [specific app] - leaderboard - Add leaderboard - Name: Leaderboard - get YOUR_GOOGLE_PLAY_GAME_LEADERBOARD_ID
- 
-//add achievements (must minimum 5 achievements), get YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID1, YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID2, YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID3, YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID4, YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID5
-google play developer console - Game services - [specific app] - achievement - Add achievement - Name: Achievement1 (Score 10), Description: Achievement1 (Score 10) - get YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID1
-google play developer console - Game services - [specific app] - achievement - Add achievement - Name: Achievement2 (Score 30), Description: Achievement2 (Score 30) - get YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID2
-google play developer console - Game services - [specific app] - achievement - Add achievement - Name: Achievement3 (Score 60), Description: Achievement3 (Score 60) - get YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID3
-google play developer console - Game services - [specific app] - achievement - Add achievement - Name: Achievement4 (Score 100), Description: Achievement4 (Score 100) - get YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID4
-google play developer console - Game services - [specific app] - achievement - Add achievement - Name: Achievement5 (Score 150), Description: Achievement5 (Score 150) - get YOUR_GOOGLE_PLAY_GAME_ACHIEVEMENT_ID5
-
-//publish game
-google play developer console - Game services - [specific app] - prepare test - publish game
-```
-## ios (Game Center) ##
-```c
-itunesconnect - 나의 App - [specific app] - Game Center - Enable for Single Game
-
-//leaderboard
-itunesconnect - 나의 App - [specific app] - Game Center - Add Leaderboard -
-단일 순위표 - 
-순위표 세트 식별 정보: testapp_leaderboard - 
-순위표 ID: testapp_leaderboard -
-점수 형식 유형: Integer -
-점수 제출 유형: 가장 높은 점수
-정렬 순서: 높은 점수순 -
-Add Language -
-언어: English -
-이름: Leaderboard -
-점수 형식: Integer (100,000,122) -
-Save
-
-//achievement1
-itunesconnect - 나의 App - [specific app] - Game Center - 목표 달성 추가 -
-목표 달성 식별 정보: testapp_achievement1
-목표 달성 ID: testapp_achievement1
-점수 값: 20 (max 100)
-숨김: No
-여러 번 달성 가능: No
-언어 추가 - 
-언어: English 
-제목: Achievement1 (Score 10)
-사전 획득한 목표 달성 설명: Achievement1 (Score 10)
-획득한 목표 달성 설명: Achievement1 (Score 10)
-이미지: 512x512 png
-
-//achievement2
-itunesconnect - 나의 App - [specific app] - Game Center - 목표 달성 추가 -
-목표 달성 식별 정보: testapp_achievement2
-목표 달성 ID: testapp_achievement2
-점수 값: 40 (max 100)
-숨김: No
-여러 번 달성 가능: No
-언어 추가 - 
-언어: English 
-제목: Achievement2 (Score 30)
-사전 획득한 목표 달성 설명: Achievement2 (Score 30)
-획득한 목표 달성 설명: Achievement2 (Score 30)
-이미지: 512x512 png
-
-//achievement3
-itunesconnect - 나의 App - [specific app] - Game Center - 목표 달성 추가 -
-목표 달성 식별 정보: testapp_achievement3
-목표 달성 ID: testapp_achievement3
-점수 값: 60 (max 100)
-숨김: No
-여러 번 달성 가능: No
-언어 추가 - 
-언어: English 
-제목: Achievement3 (Score 60)
-사전 획득한 목표 달성 설명: Achievement3 (Score 60)
-획득한 목표 달성 설명: Achievement3 (Score 60)
-이미지: 512x512 png
-
-//achievement4
-itunesconnect - 나의 App - [specific app] - Game Center - 목표 달성 추가 -
-목표 달성 식별 정보: testapp_achievement4
-목표 달성 ID: testapp_achievement4
-점수 값: 80 (max 100)
-숨김: No
-여러 번 달성 가능: No
-언어 추가 - 
-언어: English 
-제목: Achievement4 (Score 100)
-사전 획득한 목표 달성 설명: Achievement4 (Score 100)
-획득한 목표 달성 설명: Achievement4 (Score 100)
-이미지: 512x512 png
-
-//achievement5
-itunesconnect - 나의 App - [specific app] - Game Center - 목표 달성 추가 -
-목표 달성 식별 정보: testapp_achievement5
-목표 달성 ID: testapp_achievement5
-점수 값: 100 (leave blank, max 100)
-숨김: No
-여러 번 달성 가능: No
-언어 추가 - 
-언어: English 
-제목: Achievement5 (Score 150)
-사전 획득한 목표 달성 설명: Achievement5 (Score 150)
-획득한 목표 달성 설명: Achievement5 (Score 150)
-이미지: 512x512 png
-
-can test before publish
-```
 # API #
 ```javascript
 //
@@ -333,13 +143,7 @@ window.game.resetAchievements();//only supported on ios
 
 //
 window.game.getPlayerImage();
-
 ```
-# Examples #
-<a href="https://github.com/cranberrygame/com.cranberrygame.phonegap.plugin.game/blob/master/example/basic/index.html">example/index.html</a><br>
-<a href="https://github.com/cranberrygame/com.cranberrygame.phonegap.plugin.game/blob/master/example/basic_tag/index.html">example_tag/index.html</a>
-
-# Test #
 
 ## android (Google Play Game) ##
 
