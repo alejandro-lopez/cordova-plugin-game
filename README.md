@@ -174,27 +174,6 @@ Setting - Account - Google - Logout with previous google account and login with 
 Setting - Game Center - Logout with previous ios account and login with other ios account
 ```
 
-## ios (Game Center) ##
-
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/iossandbox1.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/iossandbox2.png"><br>
-<img src="https://raw.githubusercontent.com/cranberrygame/cordova-plugin-game/master/doc/iossandbox3.png">
-
-```c
-//itunes connect sand box (Caution!)
-itunes connect - User and role - Sand box test - add tester (not real email but faked email)
-
-//iphone sand box (Caution!)
-//The requested operation could not be completed because the application is not recognized by Game Center.
-iphone - Setting - Game Center - activate sand box mode - login with itunes connect sand box account in the app 
-```
-
-```c
-the requested operation has been canceled or disabled by the user
-Reenabling GameCenter after user-cancelled 3 times (iOS7 only)
-iphone - Setting - General - Reset - Reset All Settings
-http://stackoverflow.com/questions/18927723/reenabling-gamecenter-after-user-cancelled-3-times-ios7-only
-```
 
 # Useful links #
 
