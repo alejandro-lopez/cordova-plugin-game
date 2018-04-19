@@ -70,7 +70,7 @@
 		<dependency id="cordova-plugin-extras-google-play-services" />		
 		<dependency id="cordova-plugin-extras-android-support-library-v4" />
 -->		
-		<dependency id="cordova-plugin-extras-google-play-services" url="https://github.com/cranberrygame/cordova-plugin-extras-google-play-services" />
+		<dependency id="cordova-plugin-extras-google-play-services" url="https://github.com/RenaudROHLINGER/cordova-plugin-extras-google-play-services" />
     </platform>
 	
     <!-- ios -->
