@@ -1,21 +1,21 @@
-module.exports = {
+var exec = require('cordova/exec');
+
+var Game = {
 	_loggedin: false,
+	
 	tag: '',
+	
 	setUp: function () {
-		cordova.exec(
-		function (result) {
-		},
-		function (error) {
-		}, "Game", "setUp", []);
+		exec(null, null, "Game", "setUp", []);
 	},
 	login: function (tag) {
 		var self = this;
-		cordova.exec(function (result) {
+		exec(function (result) {
 			var playerDetail = result;
 			self._loggedin = true;
 			self.tag = tag;
 			if (self.onLoginSucceeded)
-			self.onLoginSucceeded(playerDetail);
+				self.onLoginSucceeded(playerDetail);
 		},
 		function (error) {
 			self.tag = tag;
@@ -25,7 +25,7 @@ module.exports = {
 	},
 	logout: function () {
 		var self = this;
-		cordova.exec(function (result) {
+		exec(function (result) {
 			self._loggedin = false;
 		},
 		function (error) {
@@ -36,7 +36,7 @@ module.exports = {
 	},
 	submitScore: function (leaderboardId, score, tag) {
 		var self = this;
-		cordova.exec(function (result) {
+		exec(function (result) {
 			self.tag = tag;
 			if (self.onSubmitScoreSucceeded)
 			self.onSubmitScoreSucceeded();
@@ -48,25 +48,25 @@ module.exports = {
 		}, "Game", "submitScore", [leaderboardId, score]);
 	},
 	getTopScores: function (leaderboardId, resolve, reject) {
-		cordova.exec(resolve, reject, "Game", "getTopScores", [leaderboardId]);
+		exec(resolve, reject, "Game", "getTopScores", [leaderboardId]);
 	},
 	getAchievements: function (success, failure) {
-		cordova.exec(success, failure, "Game", "getAchievements", []);
+		exec(success, failure, "Game", "getAchievements", []);
 	},
 	getLeaderboards: function () {
 		return new Promise(function(resolve, reject){
-			cordova.exec(resolve, reject, "Game", "getLeaderboards", []);
+			exec(resolve, reject, "Game", "getLeaderboards", []);
 		})
 	},
 	showLeaderboard: function (leaderboardId) {
-		cordova.exec(
+		exec(
 		function (result) {
 		},
 		function (error) {
 		}, "Game", "showLeaderboard", [leaderboardId]);
 	},
 	showLeaderboards: function () {
-		cordova.exec(
+		exec(
 		function (result) {
 		},
 		function (error) {
@@ -74,7 +74,7 @@ module.exports = {
 	},
 	getPlayerScore: function (leaderboardId, tag) {
 		var self = this;
-		cordova.exec(function (result) {
+		exec(function (result) {
 			var playerScore = result;
 			self.tag = tag;
 			if (self.onGetPlayerScoreSucceeded)
@@ -88,7 +88,7 @@ module.exports = {
 	},
 	unlockAchievement: function (achievementId, tag) {
 		var self = this;
-		cordova.exec(function (result) {
+		exec(function (result) {
 			self.tag = tag;
 			if (self.onUnlockAchievementSucceeded)
 			self.onUnlockAchievementSucceeded();
@@ -101,7 +101,7 @@ module.exports = {
 	},
 	incrementAchievement: function (achievementId, incrementalStepOrCurrentPercent, tag) {
 		var self = this;
-		cordova.exec(function (result) {
+		exec(function (result) {
 			self.tag = tag;
 			if (self.onIncrementAchievementSucceeded)
 			self.onIncrementAchievementSucceeded();
@@ -113,7 +113,7 @@ module.exports = {
 		}, "Game", "incrementAchievement", [achievementId, incrementalStepOrCurrentPercent]);
 	},
 	showAchievements: function () {
-		cordova.exec(
+		exec(
 		function (result) {
 		},
 		function (error) {
@@ -121,7 +121,7 @@ module.exports = {
 	},
 	resetAchievements: function () {
 		var self = this;
-		cordova.exec(function (result) {
+		exec(function (result) {
 			if (self.onResetAchievementsSucceeded)
 			self.onResetAchievementsSucceeded();
 		},
@@ -132,7 +132,7 @@ module.exports = {
 	},
 	getPlayerImage: function () {
 		var self = this;
-		cordova.exec(function (result) {
+		exec(function (result) {
 			var playerImageUrl = result;
 			if (self.onGetPlayerImageSucceeded)
 			self.onGetPlayerImageSucceeded(playerImageUrl);
@@ -159,3 +159,5 @@ module.exports = {
 	onGetPlayerImageSucceeded: null,
 	onGetPlayerImageFailed: null
 };
+
+module.exports = Game;
