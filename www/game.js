@@ -6,7 +6,7 @@ var Game = {
 	tag: '',
 	
 	setUp: function () {
-		exec(null, null, "Game", "setUp", []);
+		exec(functon(results){}, function(error){}, "Game", "setUp", []);
 	},
 	login: function (tag) {
 		var self = this;
