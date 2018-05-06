@@ -24,7 +24,7 @@
 		<preference name="APP_ID" />	
 
 	    <config-file target="res/xml/config.xml" parent="/*">
-			<feature name="Game" >
+			<feature name="cordovaGame" >
 				<param name="android-package" value="com.cranberrygame.cordova.plugin.game.Game"/>
 			</feature>
         </config-file>
